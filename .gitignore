@@ -1,0 +1,20 @@
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# Cache de Python (se genera automaticamente al correr el codigo)
+__pycache__/
+*.pyc
+*.pyo
+
+# Archivos de configuracion de editores
+.vscode/
+.idea/
+
+# Archivos basura del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de registro, si el proyecto llega a generar alguno
+*.log
