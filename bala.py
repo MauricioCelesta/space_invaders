@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 
 
 class Bala:
@@ -6,7 +6,7 @@ class Bala:
         self.x = x
         self.y = y
         self.imagen = imagen
-        self.mascara = pygame.mask.from_surface(self.imagen)
+        self.mascara = pg.mask.from_surface(self.imagen)
 
     def dibujar(self, ventana):
         ventana.blit(self.imagen, (self.x, self.y))

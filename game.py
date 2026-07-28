@@ -1,7 +1,7 @@
-import pygame
+import pygame as pg
 import os
 
-IMAGEN_BALA = pygame.image.load(os.path.join('img', 'bullet_image.png'))
+IMAGEN_BALA = pg.image.load(os.path.join('img', 'bullet_image.png'))
 
 
 class Juego:
@@ -14,13 +14,13 @@ class Juego:
         self.imagen_bala = IMAGEN_BALA
         self.vidas = vidas
         self.fps = fps
-        self.reloj = reloj if reloj is not None else pygame.time.Clock()
+        self.reloj = reloj if reloj is not None else pg.time.Clock()
         self.contador = contador
 
     def salir(self):
         se_solicito_salir = False
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
+        for evento in pg.event.get():
+            if evento.type == pg.QUIT:
                 se_solicito_salir = True
         return se_solicito_salir
 
@@ -35,7 +35,7 @@ class Juego:
                     ((self.ancho - etiqueta_perdiste.get_width()) / 2,
                      (self.alto - etiqueta_perdiste.get_height()) / 2)
                 )
-                pygame.display.update()
+                pg.display.update()
                 self.contador += 1
                 if self.contador == self.fps * 3:
                     break
