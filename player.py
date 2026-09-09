@@ -8,7 +8,7 @@ IMAGEN_BALA_JUGADOR = pg.image.load(BULLET_IMAGE).convert_alpha()
 
 
 class Jugador(Barco):
-    def __init__(self, x, y, velocidad_x, velocidad_y, salud=100):
+    def __init__(self, x, y, velocidad_x=5, velocidad_y=5, salud=100):
         super().__init__(x, y, salud)
         self.imagen_nave = IMAGEN_JUGADOR
         self.imagen_bala = IMAGEN_BALA_JUGADOR
@@ -78,6 +78,7 @@ class Jugador(Barco):
     def detectar_impacto(self, enemigo):
         for bala in self.balas_disparadas:
             if bala.colision(enemigo):
+                self.balas_disparadas.remove(bala)
                 self.contador_espera_creacion = self.tiempo_espera * 0.8
                 return True
         return False

@@ -1,21 +1,26 @@
 import pygame as pg
-import os
-
-IMAGEN_BALA = pg.image.load(os.path.join('img', 'bullet_image.png'))
+from config import BULLET_IMAGE, SCORES_FILE
 
 
 class Juego:
-    def __init__(self, fuente, fps, contador, ventana, vidas, ancho_pantalla, alto_pantalla, balas=0, reloj=None):
+    def __init__(self, fuente, fps, vidas, ventana, ancho_pantalla, alto_pantalla, balas=0, reloj=None):
         self.fuente = fuente
-        self.ventana = ventana
-        self.alto = alto_pantalla
         self.ancho = ancho_pantalla
-        self.balas = balas
-        self.imagen_bala = IMAGEN_BALA
-        self.vidas = vidas
+        self.alto = alto_pantalla
         self.fps = fps
+        self.vidas = vidas
+        self.nivel = 1
+        self.contador = 0
+        self.ventana = ventana
         self.reloj = reloj if reloj is not None else pg.time.Clock()
-        self.contador = contador
+        self.balas = balas
+        self.imagen_bala = pg.image.load(BULLET_IMAGE).convert_alpha()
+
+        registros = self.leer_registros(SCORES_FILE)
+        if len(registros) > 0:
+            self.jugador_recordista, self.max_puntaje = registros[0]
+        else:
+            self.jugador_recordista, self.max_puntaje = None, 0
 
     def salir(self):
         se_solicito_salir = False
@@ -29,7 +34,7 @@ class Juego:
             self.contador = 0
             while True:
                 self.reloj.tick(self.fps)
-                etiqueta_perdiste = self.fuente.render('Game Over', 1, (255, 255, 255))
+                etiqueta_perdiste = self.fuente.render('GAME OVER', 1, (255, 255, 255))
                 self.ventana.blit(
                     etiqueta_perdiste,
                     ((self.ancho - etiqueta_perdiste.get_width()) / 2,
@@ -42,3 +47,28 @@ class Juego:
             return True
         else:
             return False
+
+    def recargar_balas(self, cantidad_balas):
+        self.balas = cantidad_balas
+
+    def dibujar_hud(self):
+        desplazamiento = 0
+        etiqueta_vidas = self.fuente.render(f'Vidas: {self.vidas}', 1, (255, 255, 255))
+        etiqueta_nivel = self.fuente.render(f'Nivel: {self.nivel}', 1, (255, 255, 255))
+        self.ventana.blit(etiqueta_vidas, (10, 10))
+        self.ventana.blit(etiqueta_nivel, (self.ancho - etiqueta_nivel.get_width() - 10, 10))
+        for _ in range(self.balas):
+            desplazamiento += self.imagen_bala.get_width()
+            self.ventana.blit(self.imagen_bala, (self.ancho - desplazamiento, self.alto - 50))
+
+    def leer_registros(self, nombre_archivo):
+        registros = []
+        try:
+            with open(nombre_archivo, 'r') as archivo:
+                for linea in archivo:
+                    nombre, puntuacion = linea.strip().split(",")
+                    registros.append((nombre, int(puntuacion)))
+        except FileNotFoundError:
+            print("El archivo no existe")
+
+        return sorted(registros, key=lambda x: x[1], reverse=True)[:5]
